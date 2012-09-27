@@ -1,0 +1,23 @@
+####
+make 
+make install
+make clean
+
+ln
+ll  /查看文件所有者
+sudo chown -R dinglin:dinglin pages /更改所有者
+ssh ***@ip  /
+
+tar -zxvf ZendStudio-9.0.0-x86_64.tar.gzz /usr/local/
+############
+sudo /usr/local/apache2/bin/apachectl restart
+sudo /usr/local/apache2/bin/apachectl start
+sudo /usr/local/apache2/bin/apachectl stop
+ sudo /etc/init.d/apache2 stop
+
+
+sudo netstat -ntlp | grep 80
+
+svn checkout http://dev.aifang.com/sites/pages/
+
+sudoapt-get install openssh-server 文件传送

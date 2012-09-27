@@ -1,0 +1,3 @@
+v2框架中的memcache机制；
+dao层对于find、find by id方法、main column设定方式的memcache机制；
+尤其要理解的是key的build机制。

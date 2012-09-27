@@ -1,0 +1,71 @@
+#!/usr/bin/python
+import sys
+import os
+from subprocess import Popen, PIPE
+
+def run(command):
+    p = Popen(command.split(), stdout=PIPE, stderr=PIPE)
+    p.wait()
+    return p.returncode, p.stdout.read().strip().split(), p.stderr.read()
+
+def get_lines(file_read):
+    return file_read.read().splitlines(True)
+
+_, files_modified, _= run("git diff-index --name-only --cached HEAD")
+
+for fname in files_modified:
+    res_proc=os.popen("file " + fname + " |awk -F\':\' \'{print $NF}\'");
+    res=res_proc.read()
+    res_proc.close()
+    if res.find('text') == -1:
+        print "%s is empty or not a text file ..."%(fname,)
+        continue
+
+    print "Converting on %s ..."%(fname,)
+    file_convert=open(fname,'r')
+    lines=get_lines(file_convert)
+    
+	#file_convert.close()
+	
+    lineoutput=[]
+
+    for line in lines:
+        result=line
+        if line.endswith('\r\n'):
+            result=line[:-2]+'\n'
+        if line.endswith('\r'):
+            result=line[:-1]+'\n'
+        lineoutput.append(result)
+
+    output=[]
+
+    for line in lineoutput:
+        result=[]
+        headFlag=True
+        for c in line:
+            if headFlag:
+                if c=='\t':
+                    result.append('    ')
+                elif c==' ':
+                    result.append(c)
+                else:
+                    result.append(c)
+                    headFlag=False
+            else:
+                result.append(c)
+        for i in range(len(result)-2,-1,-1):
+            c=result[i]
+            if c==' ' or c=='\t':
+                del result[i]
+            else:
+                break
+        string=''.join(result)
+        output.append(string)
+    if cmp(output,lines) !=0 :
+        file_convert=open(fname,'w')
+        for line in output:
+            file_convert.write(line)
+   # file_convert.close()
+    file_convert.close()
+    run("git add %s"%(fname,))
+

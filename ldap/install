@@ -1,0 +1,26 @@
+wget ftp://ftp.openldap.org/pub/OpenLDAP/openldap-release/openldap-2.4.32.tgz
+tar -xjvf openldap-2.4.32.tgz
+cd openldap-2.4.32
+/usr/local/php-5.3.x/bin/phpize
+./configure --prefix=/usr \
+            --sysconfdir=/etc \
+            --localstatedir=/var \
+            --libexecdir=/usr/lib \
+            --disable-static \
+            --disable-debug \
+            --enable-dynamic \
+            --enable-crypt \
+            --enable-modules \
+            --enable-rlookups \
+            --enable-backends=mod \
+            --enable-overlays=mod \
+            --disable-ndb \
+            --disable-sql
+make
+make install
+
+sudo make install;
+Installing shared extensions:     /usr/local/php-5.3.3/lib/php/extensions/no-debug-non-zts-20090626/
+
+##############
+extension=ldap.so
