@@ -1,0 +1,5 @@
+git clone git@git.corp.anjuke.com:aifang/anjuke-oa system
+
+cd system
+
+git checkout system

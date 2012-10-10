@@ -1,26 +1,15 @@
-wget ftp://ftp.openldap.org/pub/OpenLDAP/openldap-release/openldap-2.4.32.tgz
-tar -xjvf openldap-2.4.32.tgz
-cd openldap-2.4.32
-/usr/local/php-5.3.x/bin/phpize
-./configure --prefix=/usr \
-            --sysconfdir=/etc \
-            --localstatedir=/var \
-            --libexecdir=/usr/lib \
-            --disable-static \
-            --disable-debug \
-            --enable-dynamic \
-            --enable-crypt \
-            --enable-modules \
-            --enable-rlookups \
-            --enable-backends=mod \
-            --enable-overlays=mod \
-            --disable-ndb \
-            --disable-sql
-make
+1. 主要安装一下套件
+apt-get install slapd ldap-utils migrationtools
+
+2. 启动服务：
+# /etc/init.d/slapd start
+
+3. 编译安装ldap
+找到php安装源码，在*/php/ext/ldap
+/phpize
+./configure --with-php-config=/usr/local/php/bin/php-config
+make 
 make install
-
-sudo make install;
-Installing shared extensions:     /usr/local/php-5.3.3/lib/php/extensions/no-debug-non-zts-20090626/
-
 ##############
+在php/lib/php.ini
 extension=ldap.so

@@ -21,3 +21,13 @@ sudo netstat -ntlp | grep 80
 svn checkout http://dev.aifang.com/sites/pages/
 
 sudoapt-get install openssh-server 文件传送
+
+scp ssh sshopen
+
+#####################
+vim 多窗口
+/home/dinglin/bin
+
+vim /home/dinglin/.bashrc 
+  + PS1="$PS1\$($( cat $HOME/bin/git-ps1.sh ))"
+

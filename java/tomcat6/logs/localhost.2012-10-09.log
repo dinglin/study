@@ -1,0 +1,10 @@
+2012-10-9 13:39:51 org.apache.catalina.core.ApplicationContext log
+信息: ContextListener: contextInitialized()
+2012-10-9 13:39:51 org.apache.catalina.core.ApplicationContext log
+信息: SessionListener: contextInitialized()
+2012-10-9 13:39:51 org.apache.catalina.core.ApplicationContext log
+信息: ContextListener: attributeAdded('org.apache.myfaces.config.RuntimeConfig', 'org.apache.myfaces.config.RuntimeConfig@b05236')
+2012-10-9 13:39:51 org.apache.catalina.core.ApplicationContext log
+信息: ContextListener: attributeAdded('org.apache.myfaces.shared_impl.webapp.webxml.WebXml', 'org.apache.myfaces.shared_impl.webapp.webxml.WebXml@37e55794')
+2012-10-9 13:39:51 org.apache.catalina.core.ApplicationContext log
+信息: ContextListener: attributeAdded('org.apache.myfaces.webapp.StartupServletContextListener.FACES_INIT_DONE', 'true')
