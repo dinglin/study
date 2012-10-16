@@ -3,3 +3,15 @@ git clone git@git.corp.anjuke.com:aifang/anjuke-oa system
 cd system
 
 git checkout system
+
+
+
+
+//rebase master
+
+git checkout master
+git pull --rebase
+git checkout pmt-10**
+git rebase master
+
+git push branch pmt-10***
