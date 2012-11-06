@@ -27,7 +27,3 @@ sudoapt-get install openssh-server 文件传送
 sudo dpkg -i file
 
 
-//打开chrome浏览器
-google-chrome &
-
-

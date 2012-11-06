@@ -1,0 +1,37 @@
+sudo apt-get install phpunit
+
+ 
+
+验证PHPUnit安装成功，命令行输入phpunit
+
+$ phpunit
+
+ 
+
+安装成功打印：
+
+PHPUnit 3.6.11 by Sebastian Bergmann.
+
+Usage: phpunit [switches] UnitTest [UnitTest.php]
+
+phpunit [switches] <directory>
+
+ 
+
+如果出现如下的错误。
+
+PHP Warning: require_once(PHP/CodeCoverage/Filter.php): failed to open stream: No such file or directory in /usr/bin/phpunit on line 39
+
+PHP Fatal error: require_once(): Failed opening required 'PHP/CodeCoverage/Filter.php' (include_path='.:/usr/share/php:/usr/share/pear') in /usr/bin/phpunit on line 39
+
+更新 chanel 和 pear，来自 Debian 和 ubuntu 社区的方法。测试可用
+
+sudo apt-get remove phpunit
+sudo pear channel-discover pear.phpunit.de
+sudo pear channel-discover pear.symfony-project.com
+sudo pear channel-discover pear.symfony.com
+sudo pear channel-discover components.ez.no
+sudo pear update-channels
+sudo pear upgrade-all
+sudo pear install --alldeps phpunit/PHPUnit
+sudo pear install  phpunit

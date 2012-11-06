@@ -1,14 +1,13 @@
+//创建一个版本库：
+git init 
+
+//chekout 分支的分支
 git clone git@git.corp.anjuke.com:aifang/anjuke-oa system
-
 cd system
-
 git checkout system
 
 
-
-
 //rebase master
-
 git checkout master
 git pull --rebase
 git checkout pmt-10**
@@ -18,8 +17,27 @@ git rebase master
 edit file
 git rebase --continue
 git push branch pmt-10***
+
 //////挂起
 git stash
 git stash apply
+
 //从master上创建分支
 git checkout -b pmt-11045 master
+
+//合并分支
+git merge pmt-11045 --no-ff
+git push origin master
+
+//日志查看
+git log
+git lg
+
+//查看
+git show <>
+git branch
+git branch -v
+git remote -v
+
+//查看冲突文件
+git diff
