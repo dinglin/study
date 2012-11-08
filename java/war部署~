@@ -1,0 +1,19 @@
+生成war文件
+在命令行窗口下执行如下命令：   
+C:\>cd myHome   
+C:\myHome\>jar cvf myhome.war */ .   
+解释：jar cvf [A=》 war包名 ].war [B=》 资源文件及文件夹 ] [C=》 将要生成war包的目标文件夹 ]   
+“*/”（B=》）代表当前目录（C:\myHome）下的所有文件及文件夹。   
+“.” （C=》）表明将要在当前目录中生成war包。   
+
+//在tomcat/conf/service.xml中添加如下
+<Host name="jx.dev.aifang.com" appBase="/home/www/release/jx"
+            unpackWARs="true" autoDeploy="true" 
+            xmlValidation="false" xmlNamespaceAware="false">
+        <Context path="" docBase="/home/www/release/jx/Performance.war" reloadable="false">
+        </Context>
+        <Valve className="org.apache.catalina.valves.AccessLogValve" directory="logs"  
+               prefix="jx.dev.aifang.com_access_log." suffix=".txt"
+               pattern='%T %a %l %u %t %{Host}i "%r" %s %b "%{Referer}i" "%{User-Agent}i" %{X-Forwarded-For}i' resolveHosts="false"/>
+      </Host>
+

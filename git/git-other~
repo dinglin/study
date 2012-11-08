@@ -23,4 +23,3 @@ git stash
 git stash apply
 //从master上创建分支
 git checkout -b pmt-11045 master
-创建一个版本库：git init 
