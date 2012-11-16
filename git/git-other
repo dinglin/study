@@ -48,3 +48,7 @@ git rebase --abort
 //回到某个状态
 git reflog
 git reset --hard 5e5b4d9
+
+//强推
+git push branch pmt-11279-update_name -f
+做git --rebase origin master后
