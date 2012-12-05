@@ -1,0 +1,5 @@
+##构建项目
+mvn eclipse:clean eclipse:eclipse
+
+##maven所需jar包
+pom.xml
