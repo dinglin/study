@@ -1,0 +1,134 @@
+## zend/zend_execute.c
+//非引用赋值
+static inline zval* zend_assign_to_variable(zval **variable_ptr_ptr, zval *value, int is_tmp_var TSRMLS_DC)
+{
+	zval *variable_ptr = *variable_ptr_ptr;
+	zval garbage;
+
+	if (variable_ptr == EG(error_zval_ptr)) {
+		if (is_tmp_var) {
+			zval_dtor(value);//回收内存
+		}
+		return EG(uninitialized_zval_ptr);
+	}
+
+	if (Z_TYPE_P(variable_ptr) == IS_OBJECT && Z_OBJ_HANDLER_P(variable_ptr, set)) {
+		Z_OBJ_HANDLER_P(variable_ptr, set)(variable_ptr_ptr, value TSRMLS_CC);
+		return variable_ptr;
+	}
+
+ 	if (PZVAL_IS_REF(variable_ptr)) {//原值存在引用
+		if (variable_ptr!=value) {
+			zend_uint refcount = Z_REFCOUNT_P(variable_ptr);
+
+			garbage = *variable_ptr;
+			*variable_ptr = *value;//指向新的值
+			Z_SET_REFCOUNT_P(variable_ptr, refcount);//设置原引用计数
+			Z_SET_ISREF_P(variable_ptr);//设置为引用状态
+			if (!is_tmp_var) {
+				zendi_zval_copy_ctor(*variable_ptr);
+			}
+			zendi_zval_dtor(garbage);
+			return variable_ptr;
+		}
+	} else {
+		if (Z_DELREF_P(variable_ptr)==0) {
+			if (!is_tmp_var) {
+				if (variable_ptr==value) {
+					Z_ADDREF_P(variable_ptr);
+				} else if (PZVAL_IS_REF(value)) {
+					garbage = *variable_ptr;
+					*variable_ptr = *value;
+					INIT_PZVAL(variable_ptr);
+					zval_copy_ctor(variable_ptr);//执行深层的拷贝
+					zendi_zval_dtor(garbage);
+					return variable_ptr;
+				} else {
+					Z_ADDREF_P(value);
+					*variable_ptr_ptr = value;
+					if (variable_ptr != &EG(uninitialized_zval)) {
+						GC_REMOVE_ZVAL_FROM_BUFFER(variable_ptr);
+						zval_dtor(variable_ptr);
+						efree(variable_ptr);
+					}
+					return value;
+				}
+			} else {
+				garbage = *variable_ptr;
+				*variable_ptr = *value;
+				INIT_PZVAL(variable_ptr);
+				zendi_zval_dtor(garbage);
+				return variable_ptr;
+			}
+		} else { /* we need to split */
+			GC_ZVAL_CHECK_POSSIBLE_ROOT(*variable_ptr_ptr);//通知gc对数组和对象执行垃圾回收操作，将变量放入垃圾列表
+			if (!is_tmp_var) {
+				if (PZVAL_IS_REF(value) && Z_REFCOUNT_P(value) > 0) {
+					ALLOC_ZVAL(variable_ptr);//分配新的zval容器
+					*variable_ptr_ptr = variable_ptr;
+					*variable_ptr = *value;
+					zval_copy_ctor(variable_ptr);
+					Z_SET_REFCOUNT_P(variable_ptr, 1);
+				} else {
+					*variable_ptr_ptr = value;
+					Z_ADDREF_P(value);
+				}
+			} else {
+				ALLOC_ZVAL(*variable_ptr_ptr);
+				Z_SET_REFCOUNT_P(value, 1);
+				**variable_ptr_ptr = *value;
+			}
+		}
+		Z_UNSET_ISREF_PP(variable_ptr_ptr);//设置为非引用
+	}
+
+	return *variable_ptr_ptr;
+}
+
+
+
+
+
+//引用赋值
+static void zend_assign_to_variable_reference(zval **variable_ptr_ptr, zval **value_ptr_ptr TSRMLS_DC)
+{
+	zval *variable_ptr = *variable_ptr_ptr;
+	zval *value_ptr = *value_ptr_ptr;
+
+	if (variable_ptr == EG(error_zval_ptr) || value_ptr==EG(error_zval_ptr)) {
+		variable_ptr_ptr = &EG(uninitialized_zval_ptr);
+	} else if (variable_ptr != value_ptr) {
+		if (!PZVAL_IS_REF(value_ptr)) {
+			/* break it away */
+			Z_DELREF_P(value_ptr);
+			if (Z_REFCOUNT_P(value_ptr)>0) {
+				ALLOC_ZVAL(*value_ptr_ptr);
+				**value_ptr_ptr = *value_ptr;
+				value_ptr = *value_ptr_ptr;
+				zendi_zval_copy_ctor(*value_ptr);
+			}
+			Z_SET_REFCOUNT_P(value_ptr, 1);
+			Z_SET_ISREF_P(value_ptr);
+		}
+
+		*variable_ptr_ptr = value_ptr;
+		Z_ADDREF_P(value_ptr);
+
+		zval_ptr_dtor(&variable_ptr);//回收内存
+	} else if (!Z_ISREF_P(variable_ptr)) {
+		if (variable_ptr_ptr == value_ptr_ptr) {
+			SEPARATE_ZVAL(variable_ptr_ptr);
+		} else if (variable_ptr==EG(uninitialized_zval_ptr)
+			|| Z_REFCOUNT_P(variable_ptr)>2) {
+			/* we need to separate */
+			Z_SET_REFCOUNT_P(variable_ptr, Z_REFCOUNT_P(variable_ptr) - 2);
+			ALLOC_ZVAL(*variable_ptr_ptr);
+			**variable_ptr_ptr = *variable_ptr;
+			zval_copy_ctor(*variable_ptr_ptr);
+			*value_ptr_ptr = *variable_ptr_ptr;
+			Z_SET_REFCOUNT_PP(variable_ptr_ptr, 2);
+		}
+		Z_SET_ISREF_PP(variable_ptr_ptr);
+	}
+}
+

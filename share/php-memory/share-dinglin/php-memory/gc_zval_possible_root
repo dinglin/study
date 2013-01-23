@@ -1,0 +1,58 @@
+
+static zend_always_inline void gc_zval_check_possible_root(zval *z TSRMLS_DC)  
+{  
+    //如果是数组或则对象类型才有可能给zval分配节点信息并放入缓冲区,只有这两种类型才可能产生环形引用
+    if (z->type == IS_ARRAY || z->type == IS_OBJECT) {  
+        gc_zval_possible_root(z TSRMLS_CC);  
+    }  
+} 
+
+ZEND_API void gc_zval_possible_root(zval *zv TSRMLS_DC)
+{
+    if (UNEXPECTED(GC_G(free_list) != NULL && GC_ZVAL_ADDRESS(zv) != NULL && GC_ZVAL_GET_COLOR(zv) == GC_BLACK) && (GC_ZVAL_ADDRESS(zv) < GC_G(buf) || GC_ZVAL_ADDRESS(zv) >= GC_G(last_unused))) {
+        /* 首先检查zval节点信息是否已经放入到节点缓冲区，如果已经放入到节点缓冲区，则直接返回 */
+        return;
+    }
+    if (zv->type == IS_OBJECT) {//对象回收
+        GC_ZOBJ_CHECK_POSSIBLE_ROOT(zv);
+        return;
+    }
+    GC_BENCH_INC(zval_possible_root);
+    if (GC_ZVAL_GET_COLOR(zv) != GC_PURPLE) {//如果zval没有被标记为紫色，
+        GC_ZVAL_SET_PURPLE(zv);              //就将其标记为紫色，表示zval被放入到节点缓冲。
+        if (!GC_ZVAL_ADDRESS(zv)) {
+            gc_root_buffer *newRoot = GC_G(unused);
+            if (newRoot) {
+                GC_G(unused) = newRoot->prev;
+            } else if (GC_G(first_unused) != GC_G(last_unused)) {
+                newRoot = GC_G(first_unused);
+                GC_G(first_unused)++;
+            } else {//发现节点缓冲区已经满了
+                if (!GC_G(gc_enabled)) {
+                    GC_ZVAL_SET_BLACK(zv);//标记为黑色，是默认颜色，正常 
+                    return;
+                }
+                zv->refcount__gc++;
+                gc_collect_cycles(TSRMLS_C);//启动垃圾分析流程了
+                zv->refcount__gc--;
+                newRoot = GC_G(unused);
+                if (!newRoot) {
+                    return;
+                }
+                GC_ZVAL_SET_PURPLE(zv);
+                GC_G(unused) = newRoot->prev;
+            }
+	    //为zval分配的节点信息会被加入到GC_G(roots)为入口的双链表中
+            newRoot->next = GC_G(roots).next;
+            newRoot->prev = &GC_G(roots);
+            GC_G(roots).next->prev = newRoot;
+            GC_G(roots).next = newRoot;
+            GC_ZVAL_SET_ADDRESS(zv, newRoot);
+            newRoot->handle = 0;
+            newRoot->u.pz = zv;
+            GC_BENCH_INC(zval_buffered);
+            GC_BENCH_INC(root_buf_length);
+            GC_BENCH_PEAK(root_buf_peak, root_buf_length);
+        }
+    }
+} 

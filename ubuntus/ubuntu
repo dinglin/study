@@ -26,6 +26,7 @@ sudoapt-get install openssh-server 文件传送
 *.deb
 sudo dpkg -i file
 
+卸载: 先dpkg -l | grep qq 找到名字，然后执行：sudo dpkg -r qq-for-wine 或 sudo dpkg -P qq-for-wine
 
 //打开chrome浏览器
 google-chrome &

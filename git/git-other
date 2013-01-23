@@ -13,6 +13,12 @@ git pull --rebase
 git checkout pmt-10**
 git rebase master
 
+//new branch
+git checkout -b pmt-
+
+//指定某点重新提交
+git cherry-pick 2214e4a
+
 //conflict
 edit file
 git rebase --continue

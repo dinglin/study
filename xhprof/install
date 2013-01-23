@@ -1,0 +1,143 @@
+//【作用】
+
+xhprof是facebook开源的一个php性能分析工具。
+
+
+//【安装】
+
+//xhprof扩展的安装：
+
+wget   http://pecl.php.net/get/xhprof-0.9.2.tgz
+
+tar zxf xhprof-0.9.2.tgz
+
+cd xhprof-0.9.2/extension/
+
+phpize
+
+./configure --with-php-config=/usr/local/php/bin/php-config
+
+make && make install
+
+//extension
+
+vi /usr/local/webserver/php/etc/php.ini
+
+extension=xhprof.so;  //别忘了将生产的xhprof.so,拷贝到你的扩展目录
+//重启apache
+
+/* */
+xhprof.output_dir=存放分析数据的日志文件的路径
+
+
+
+//Graphviz安装（这个主要是画图需要的库）
+
+wget http://www.graphviz.org/pub/graphviz/stable/SOURCES/graphviz-2.24.0.tar.gz
+
+tar zxf graphviz-2.24.0.tar.gz
+
+cd graphviz-2.24.0
+
+./configure
+
+make && make install
+
+//启动dot
+dot -c
+
+//【对应的php脚本】
+
+<?php
+
+//cpu:XHPROF_FLAGS_CPU 内存:XHPROF_FLAGS_MEMORY
+
+// 如果两个一起：XHPROF_FLAGS_CPU + XHPROF_FLAGS_MEMORY 4xhprof_enable(XHPROF_FLAGS_CPU +XHPROF_FLAGS_MEMORY);
+
+//要测试的php代码
+
+$data= xhprof_disable();   //返回运行数据
+
+// xhprof_lib在下载的包里存在这个目录,记得将目录包含到运行的php代码中
+
+include_once"xhprof_lib/utils/xhprof_lib.php";  
+
+include_once"xhprof_lib/utils/xhprof_runs.php";  
+
+$objXhprofRun= newXHProfRuns_Default(); 
+
+//第一个参数j是xhprof_disable()函数返回的运行信息
+
+// 第二个参数是自定义的命名空间字符串(任意字符串),
+
+// 返回运行ID,用这个ID查看相关的运行结果
+
+$run_id= $objXhprofRun->save_run($data, "xhprof");
+
+var_dump($run_id);
+
+
+//将xhprof源码中的xhprof_lib&&xhprof_html相关目录copy到可以访问到的地址
+
+//【查看运行结果】
+
+访问 xxx/xhprof_html/index.php?run=50d93268c386d&source=xhprof 就可经看到你的php代码运行的相关情况
+
+在php.ini中配置了xhprof.output_dir，到这个路径下你会发现有类似50d93268c386d.xhprof的文件，这个就是数据分析原始文件，
+
+其中50d93268c386d对应的就是run参数的值；xhprof对应的就是source参数的值
+
+
+//【相关解释】
+
+
+Inclusive Time (或子树时间)：包括子函数所有执行时间。
+
+Exclusive Time/Self Time：函数执行本身花费的时间，不包括子树执行时间。
+
+Wall时间：花去了的时间或挂钟时间。
+
+CPU时间：用户耗的时间+内核耗的时间
+
+
+
+Function Name 函数名
+
+Calls 调用次数
+
+Calls% 调用百分比
+
+Incl. Wall Time (microsec) 调用的包括子函数所有花费时间 以微秒算(一百万分之一秒)
+
+IWall% 调用的包括子函数所有花费时间的百分比
+
+Excl. Wall Time (microsec) 函数执行本身花费的时间，不包括子树执行时间,以微秒算(一百万分之一秒)
+
+EWall% 函数执行本身花费的时间的百分比，不包括子树执行时间
+
+Incl. CPU(microsecs) 调用的包括子函数所有花费的cpu时间。减Incl. Wall Time即为等待cpu的时间
+
+减Excl. Wall Time即为等待cpu的时间
+
+ICpu% Incl. CPU(microsecs)的百分比
+
+Excl. CPU(microsec) 函数执行本身花费的cpu时间，不包括子树执行时间,以微秒算(一百万分之一秒)。
+
+ECPU% Excl. CPU(microsec)的百分比
+
+Incl.MemUse(bytes) 包括子函数执行使用的内存。
+
+IMemUse% Incl.MemUse(bytes)的百分比
+
+Excl.MemUse(bytes) 函数执行本身内存,以字节算
+
+EMemUse% Excl.MemUse(bytes)的百分比
+
+Incl.PeakMemUse(bytes) Incl.MemUse的峰值
+
+IPeakMemUse% Incl.PeakMemUse(bytes) 的峰值百分比
+
+Excl.PeakMemUse(bytes) Excl.MemUse的峰值
+
+EPeakMemUse% EMemUse% 峰值百分比
+
