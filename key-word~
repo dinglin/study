@@ -1,5 +1,0 @@
-1. redis : REmote DIctionary Server
-2. libevent : ibevent是一个事件触发的网络库，适用于windows、linux、bsd等多种平台，内部使用select、epoll、kqueue等系统调用管理事件机制
-3. 容灾：数据容灾，应用容灾。
-4. Finagle：一个支持多协议的RPC系统
-5. GFS ：GFS是一个可扩展的分布式文件系统，用于大型的、分布式的、对大量数据进行访问的应用
