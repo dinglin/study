@@ -1,3 +1,6 @@
+//
+ssh-keygen -t rsa
+
 //创建一个版本库：
 git init 
 
