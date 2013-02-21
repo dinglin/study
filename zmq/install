@@ -1,0 +1,14 @@
+http://github.com/zeromq/jzmq
+
+$ ./autogen.sh
+$ ./configure
+$ make
+$ make install
+
+
+sudo ln -s /usr/local/lib/libjzmq.so /usr/lib/libjzmq.so
+sudo ln -s /usr/local/lib/libzmq.so /usr/lib/libzmq.so
+
+//make问题
+cd src
+javac -d . org/zeromq/*.java

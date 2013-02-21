@@ -1,0 +1,20 @@
+mvn jetty:run -Djetty.port=8989 -pl app-rpc/
+
+
+telnet localhost 9227
+
+
+ 2024  ./build/bin/pom-gen.sh ajf
+ 2025  mvn clean install -Dmaven.test.skip=true
+ 2026  ./build/bin/pom-gen.sh loupan
+ 2027  mvn clean install -Dmaven.test.skip=true
+ 2028  ./build/bin/pom-gen.sh rpc
+ 2029  mvn clean install -Dmaven.test.skip=true
+ 2030  mvn jetty:run -Djetty.port=9989 -pl app-rpc
+ 2031  mvn jetty:run -Djetty.port=9987 -pl app-rpc
+ 2032  sudo netstat -tpln |grep 9227
+ 2033  ps -ef |grep jetty
+ 2034  kill -9 25328
+ 2035  mvn jetty:run -Djetty.port=9987 -pl app-rpc
+
+

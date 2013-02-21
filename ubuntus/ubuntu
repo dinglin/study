@@ -31,4 +31,10 @@ sudo dpkg -i file
 //打开chrome浏览器
 google-chrome &
 
+//修改PATH
+vim ~/.bashrc
+vim ~/.bash_profile
+export=*/bin:$PATH
+source ~/.bashrc
+
 
