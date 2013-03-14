@@ -1,0 +1,20 @@
+
+
+django下载及安装
+
+https://www.djangoproject.com/download/
+
+
+一、ubuntu上安装python的mysql驱动 MySQLDb出现的问题
+http://sourceforge.net/projects/mysql-python/ 下载
+
+1 ~/download/MySQL-python-1.2.3$ sudo python2.7 setup.py build
+Traceback (most recent call last): File "setup.py", line 5, in from setuptools import setup, ExtensionImportError: No module named setuptools
+解决：sudo apt-get install python-setuptools
+
+
+2 EnvironmentError: mysql_config not found
+解决：sudo apt-get install libmysqlclient-dev
+
+3 pymemcompat.h:10:20: fatal error: Python.h: No such file or directorycompilation terminated.error: command 'gcc' failed with exit status 1
+解决： sudo apt-get install python-dev 
