@@ -1,0 +1,6 @@
+#!/bin/bash
+file="/home/dinglin/下载/slowquery/db10-007-slow.log.130317"
+
+select_query=`cat "$file" | grep "Query_time" | sort -r -k 3 | head -n "$max_num"`
+
+echo $select_query | awk '{print $1}'

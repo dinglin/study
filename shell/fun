@@ -1,0 +1,13 @@
+#!/bin/bash
+bad () {
+  echo $[ $a + $b ]
+}
+if [ $# -eq 2 ]
+then
+  a="$1"
+  b="$2"
+  value=`bad $a $b`
+  echo "the result is : $value"
+else
+  echo "please input two parameters"
+fi

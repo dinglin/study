@@ -1,0 +1,54 @@
+#!/bin/bash
+file="/home/dinglin/下载/slowquery/db10-007-slow.log.130317"
+
+sql=""
+a_query_time=()
+max_query_time=10
+a_lock_time=()
+a_rows_sent=()
+a_rows_examined=()
+cat $file | while read line
+do
+  #取数据
+  start=`echo "$line" | awk '{print toupper($1)}'`
+  second=`echo "$line" | awk '{print toupper($2)}'`
+  a_line=($line)
+  #提前条件
+  is_in=false
+  if [ "$start" = "#" ] && [ "$second" = "QUERY_TIME:" ];then  #query time
+    query_time=`echo "${a_line[2]} * 10000" | bc | awk -F. '{print $1}' `
+    if [ -z ${a_query_time[$max_query_time]} ];then
+      length_query_time=`echo ${#a_query_time[@]}`
+      a_query_time[$length_query_time]=$query_time
+    else
+       for q_time in $a_query_time;do
+       // cat /home/dinglin/下载/slowquery/db10-007-slow.log.130317 | grep "Query_time" | sort -r -k 3 
+      // cat /home/dinglin/下载/slowquery/db10-007-slow.log.130317 | grep "Query_time" | sort -r -k 3 | head -n 10
+       done
+    fi
+  fi
+
+  if [ "$start" = "INSERT" ] ;then
+    sql="$line"
+  if [ "$start" = "DELETE" ] ;then
+    sql="$line"
+  if [ "$start" = "UPDATE" ] ;then
+    sql="$line"
+  if [ "$start" = "SELECT" ] ;then
+    sql="$line"
+  elif [ "$start" = "#" ] && [ "$second" = "USER@HOST:" ];then  #user host
+    #echo "$sql"
+  elif [ "$start" = "#" ] && [ "$second" = "TIME:" ];then  #time
+    #echo "$sql"
+  elif [ "$start" = "#" ] && [ "$second" = "QUERY_TIME:" ];then  #query time
+    #echo "$sql" 
+  elif [ "$start" = "use" ];then #db
+    #db
+  elif [ "$start" != "#" ] && [ "$start" != "use" ] && [ "$start" != "SET" ];then
+    sql+="$line"
+  else
+    #else
+  fi
+  return "$sql"
+   
+done

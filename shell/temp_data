@@ -1,0 +1,36 @@
+# Time: 130317  1:00:25
+# User@Host: aifang[aifang] @  [10.10.3.150]
+# Query_time: 0.030368  Lock_time: 0.000072 Rows_sent: 1000  Rows_examined: 14000
+use ifstats_db;
+SET timestamp=1363453225;
+SELECT id,item_id,total_pv,total_uv FROM stat_day_item_prop WHERE date_index='20130315' AND id>15275235 LIMIT 1000 # php aifang-jobs : 10A8A969-82F5-4D50-B2D3-DE12F109E66A : 2013-03-17 01-00-25 end;
+# User@Host: aifang[aifang] @  [10.10.3.150]
+# Query_time: 0.031516  Lock_time: 0.000067 Rows_sent: 1000  Rows_examined: 15000
+SET timestamp=1363453225;
+SELECT id,item_id,total_pv,total_uv FROM stat_day_item_prop WHERE date_index='20130315' AND id>15276235 LIMIT 1000 # php aifang-jobs : 10A8A969-82F5-4D50-B2D3-DE12F109E66A : 2013-03-17 01-00-25 end;
+# User@Host: aifang[aifang] @  [10.10.3.150]
+# Query_time: 0.034771  Lock_time: 0.000076 Rows_sent: 1000  Rows_examined: 16000
+SET timestamp=1363453225;
+SELECT id,item_id,total_pv,total_uv FROM stat_day_item_prop WHERE date_index='20130315' AND id>15277235 LIMIT 1000 # php aifang-jobs : 10A8A969-82F5-4D50-B2D3-DE12F109E66A : 2013-03-17 01-00-25 end;
+# User@Host: aifang[aifang] @  [10.10.3.150]
+# Query_time: 0.036005  Lock_time: 0.000066 Rows_sent: 1000  Rows_examined: 17000
+SET timestamp=1363453225;
+SELECT id,item_id,total_pv,total_uv FROM stat_day_item_prop WHERE date_index='20130315' AND id>15278235 LIMIT 1000 # php aifang-jobs : 10A8A969-82F5-4D50-B2D3-DE12F109E66A : 2013-03-17 01-00-25 end;
+# Time: 130317  1:00:25
+# User@Host: aifang[aifang] @  [10.10.3.150]
+# Query_time: 0.030368  Lock_time: 0.000072 Rows_sent: 1000  Rows_examined: 14000
+use ifstats_db;
+SET timestamp=1363453225;
+SELECT id,item_id,total_pv,total_uv FROM stat_day_item_prop WHERE date_index='20130315' AND id>15275235 LIMIT 1000 # php aifang-jobs : 10A8A969-82F5-4D50-B2D3-DE12F109E66A : 2013-03-17 01-00-25 end;
+# User@Host: aifang[aifang] @  [10.10.3.150]
+# Query_time: 0.031516  Lock_time: 0.000067 Rows_sent: 1000  Rows_examined: 15000
+SET timestamp=1363453225;
+SELECT id,item_id,total_pv,total_uv FROM stat_day_item_prop WHERE date_index='20130315' AND id>15276235 LIMIT 1000 # php aifang-jobs : 10A8A969-82F5-4D50-B2D3-DE12F109E66A : 2013-03-17 01-00-25 end;
+# User@Host: aifang[aifang] @  [10.10.3.150]
+# Query_time: 0.034771  Lock_time: 0.000076 Rows_sent: 1000  Rows_examined: 16000
+SET timestamp=1363453225;
+SELECT id,item_id,total_pv,total_uv FROM stat_day_item_prop WHERE date_index='20130315' AND id>15277235 LIMIT 1000 # php aifang-jobs : 10A8A969-82F5-4D50-B2D3-DE12F109E66A : 2013-03-17 01-00-25 end;
+# User@Host: aifang[aifang] @  [10.10.3.150]
+# Query_time: 0.036005  Lock_time: 0.000066 Rows_sent: 1000  Rows_examined: 17000
+SET timestamp=1363453225;
+SELECT id,item_id,total_pv,total_uv FROM stat_day_item_prop WHERE date_index='20130315' AND id>15278235 LIMIT 1000 # php aifang-jobs : 10A8A969-82F5-4D50-B2D3-DE12F109E66A : 2013-03-17 01-00-25 end;

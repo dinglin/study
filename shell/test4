@@ -1,0 +1,86 @@
+#!/bin/bash
+base_path=`pwd`
+file="$base_path"/"$1"
+tmp="$file""_tmp"
+out_put="$file""_output"
+
+sql=""
+db=""
+time=""
+query_time=""
+
+function write_file(){
+        if [ -z "$4" ];then
+            return 0
+        fi
+        local start=`echo "$4 " | awk '{print toupper($1)}'`
+        local table=""
+        local open="false"
+        local table_start=""
+        local table_end=""
+        if [ "$start" = "SELECT" ];then
+            table_start="FROM"
+            table_end="WHERE"
+        elif [ "$start" = "DELETE" ];then
+            table_start="FROM"
+            table_end="WHERE"        
+        elif [ "$start" = "UPDATE" ];then
+            table_start="UPDATE"
+            table_end="SET"
+        elif [ "$start" = "INSERT" ];then
+            table_start="INTO"
+            table_end="END"
+        fi
+        for i in $4;do
+            i=`echo "$i " | awk '{print toupper($1)}'`
+            if [ "$i" = "$table_start" ];then
+                open="true"
+            elif [ "$i" = "$table_end" ];then 
+                open="false"
+                break
+            elif [ "$open" = "true" ];then  
+                table+="$i"
+                if [ "$table_end" = "END" ];then
+                    break
+                fi
+            fi
+        done  
+        local db=`echo "$1" | sed 's/;//'`
+        table=`echo "$table" | sed 's/(.*//'`
+        table=$(echo "$table" | sed 's/`//g')
+        local sql=`echo "$4" | sed 's/# php.*//'`
+
+        if [ -n "$table" ];then
+            table=`echo "$table " | awk '{print tolower($1)}'`
+            echo "$db $table $2 $3 $sql" >> "$5"
+        fi
+}
+
+while read line
+do
+    #data
+    start=`echo "$line" | awk '{print toupper($1)}'`
+    second=`echo "$line" | awk '{print toupper($2)}'`
+    a_line=($line)
+
+    #build sql
+    if [ "$start" = "INSERT" ] || [ "$start" = "DELETE" ] || [ "$start" = "UPDATE" ] || [ "$start" = "SELECT" ];then
+       sql="$line"
+    elif [ "$start" = "#" ] && [ "$second" = "USER@HOST:" ];then  #user host
+ 	write_file "$db" "$query_time" "$time" "$sql" "$tmp"
+    elif [ "$start" = "#" ] && [ "$second" = "TIME:" ];then  #time
+        time=${a_line[3]}
+    elif [ "$start" = "#" ] && [ "$second" = "QUERY_TIME:" ];then  #query time
+        query_time=${a_line[2]}
+    elif [ "$start" = "USE" ];then #db
+        db=${a_line[1]}
+    elif [ "$start" != "#" ] && [ "$start" != "USE" ] && [ "$start" != "SET" ];then
+        sql+=" "        
+        sql+="$line"
+    fi
+done < "$file"
+write_file "$db" "$query_time" "$time" "$sql" "$tmp"
+
+cat "$tmp" | sort -r -k 2,3  > "$out_put"
+rm "$tmp"
+exit 0

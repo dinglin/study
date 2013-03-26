@@ -1,0 +1,73 @@
+#!/bin/bash
+
+file="/home/dinglin/下载/slowquery/temp_data"
+tmp="/home/dinglin/下载/slowquery/temp"
+max_num=10
+
+sql=""
+current_index=0
+old_host=""
+is_in="false"
+a_query_time=()
+a_host=()
+a_time=()
+a_db=()
+a_sql=()
+a_selected=()
+#top $max_num
+
+cat "$file" | grep "Query_time" | sort -r -k 3 | head -n "$max_num" > "$tmp"
+
+while read line
+do
+    #data
+    start=`echo "$line" | awk '{print toupper($1)}'`
+    second=`echo "$line" | awk '{print toupper($2)}'`
+    #a_line=($line)
+
+    #on selected
+    if [ "$start" = "#" ] && [ "$second" = "QUERY_TIME:" ];then  #query time
+        is_in="false"
+        while read line2
+        do
+            if [ "$line2" = "$line" ];then
+                is_in="true"
+                current_index=$(( $current_index + 1 ))
+            fi
+        done < "$tmp"
+    fi
+
+    #build sql
+    if [ "$is_in" = "true" ];then
+        if [ "$start" = "INSERT" ] ;then
+            sql="$line"
+        elif [ "$start" = "DELETE" ] ;then
+            sql="$line"
+        elif [ "$start" = "UPDATE" ] ;then
+            sql="$line"
+        elif [ "$start" = "SELECT" ] ;then
+            sql="$line"
+        elif [ "$start" = "#" ] && [ "$second" = "USER@HOST:" ];then  #user host
+            a_host[ "$current_index" ]="$old_host"
+        elif [ "$start" = "#" ] && [ "$second" = "TIME:" ];then  #time
+            a_time[ "$current_index" ]="$line"
+        elif [ "$start" = "#" ] && [ "$second" = "QUERY_TIME:" ];then  #query time
+            a_query_time[ "$current_index" ]="$line"
+        elif [ "$start" = "USE" ];then #db
+            a_db[ "$current_index" ]="$line"
+        elif [ "$start" != "#" ] && [ "$start" != "USE" ] && [ "$start" != "SET" ];then
+            sql+="$line"
+        fi
+    fi  
+
+    #old host
+    if [ "$start" = "#" ] && [ "$second" = "USER@HOST:" ];then  #user host
+        if [ -n "$sql" ];then
+             a_sql[ "$current_index" ]="$sql"
+        fi
+        old_host="$line"
+        sql=""
+    fi
+done < "$file"
+echo ${a_query_time[@]}
+#echo ${a_sql[9]}
