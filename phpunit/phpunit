@@ -1,7 +1,0 @@
-写完单元测试脚 本后，下一步就是执行测试，最简单的命令是：phpunit xxx.php
-
-更加详细的命令如下： phpunit --log-xml(log 文件格式) 文件路径/文件名 --coverage-html(代码覆盖文件格式) 文件路径/文件名 单元测试用例类 单元测试文件 
-如：phpunit --log-xml path/createAlbumlog --coverage-html path/logs/ createAlbumtest createAlbum.php
-
-命令执行过程中，.--表示成功，e--代表error, f--代表失败， 执行完成后会显示测试用例成功、失败和出错情况。
-也可以通过查看log查看测试情况，coverage文件可以查看单元测试脚本对测试文件代码覆盖率情 况。 

@@ -1,8 +1,0 @@
-上传图片 出现错误：413 Request Entity Too Large
-修改nginx.conf 在http{
-    client_max_body_size 10M; #添加 改大点
-}
-修改php.ini 中
-upload_max_filesize = 10M
-post_max_size = 10M
-重启nginx，apache ,php-fpm 

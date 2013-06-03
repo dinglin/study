@@ -1,9 +1,0 @@
-主要安装一下套件
-apt-get install slapd ldap-utils migrationtools
-
-启动服务：
-# /etc/init.d/slapd start
-
-
-##############
-extension=ldap.so
